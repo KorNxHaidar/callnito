@@ -2,7 +2,7 @@
 
 📌 **Project Overview**
 
-This project focuses on designing and building an application for real-time scam call detection. It utilizes **ASR (Automatic Speech Recognition)** to transcribe Thai voice conversations and **RAG (Retrieval-Augmented Generation)** to leverage a knowledge base of Thairath news articles about various scams. The entire system is accessible via a **Line Bot** integrated with a **Streamlit** web app, powered by LangChain and the **Google Gemini LLM**, with modern environment management using `uv`.
+This project focuses on designing and building an application for real-time scam call detection. It utilizes **ASR (Automatic Speech Recognition)** to transcribe Thai voice conversations and **RAG (Retrieval-Augmented Generation)** to leverage a knowledge base of Thairath news articles about various scams. The entire system is accessible via a **Line Bot** integrated with a **[Streamlit](https://streamlit.io/)** web app, powered by LangChain and the **[Google Gemini LLM](https://aistudio.google.com/)**, with modern environment management using `uv`.
 
 ---
 
@@ -11,9 +11,9 @@ This project focuses on designing and building an application for real-time scam
 In recent years, "Call Center Gangs" have become a critical issue in Thailand 🇹🇭, causing massive financial loss and distress. Having tools for timely verification and real-time warnings is essential.
 
 This project builds a **scam detection pipeline** that:
-1.  **Listens**: Uses **Typhoon ASR (Realtime)** to convert Thai speech to text instantly.
+1.  **Listens**: Uses **[Typhoon ASR (Realtime)](https://opentyphoon.ai/)** to convert Thai speech to text instantly.
 2.  **Analyzes**: Utilizes a **RAG system** with a database of real news articles from **Thairath** to serve as the "brain" for providing context to the LLM.
-3.  **Detects**: Integrates **Google Gemini LLM** to analyze the conversation patterns against the retrieved scam context and blacklist data.
+3.  **Detects**: Integrates **[Google Gemini LLM](https://aistudio.google.com/)** to analyze the conversation patterns against the retrieved scam context and blacklist data.
 4.  **Alerts**: Sends immediate notifications to a Line Group if a high-risk conversation is detected.
 
 To ensure the system is easy to develop and deploy, this project uses `uv` for rapid dependency and virtual environment management, and `Streamlit` to create a dashboard that is accessible to general users via a Line Bot link.
@@ -33,7 +33,7 @@ $ cd callnito
 
 ### 2. Create & Activate Virtual Environment
 
-This project uses `uv` (which is much faster than pip and venv).
+This project uses `uv` (which is much faster than pip and venv). You can learn more about it **[here](https://github.com/astral-sh/uv)**.
 
 ```bash
 # 1. Create the virtual environment
@@ -62,7 +62,7 @@ You must set up your environment variables first!
 Create a new file named `.env` in the project's root directory and add the following keys:
 
 ```env
-# Gemini API Key (Required for LLM analysis)
+# [Gemini API Key](https://aistudio.google.com/app/apikey) (Required for LLM analysis)
 GOOGLE_API_KEY="YOUR_OWN_GOOGLE_API_KEY"
 
 # Line Bot Configuration
@@ -94,11 +94,11 @@ The RAG system requires a knowledge base to function. This project includes scri
 
 To integrate with the **Line Bot** and allow external access to the **Streamlit App**, you need to expose your local ports (8000 and 8501) to the internet.
 
-**Option A: Using ngrok (Recommended)**
+**Option A: Using [ngrok](https://ngrok.com/) (Recommended)**
 1.  Run `ngrok http 8000` -> Use this URL for the **Line Webhook** (e.g., `.../callback`).
 2.  Run `ngrok http 8501` -> Use this URL for the `WEB_URL` in `.env`.
 
-**Option B: Using pinggy.io**
+**Option B: Using [pinggy.io](https://pinggy.io/)**
 Run the following command to get a quick public URL:
 ```bash
 $ ssh -p 443 -R0:localhost:8000 qr@a.pinggy.io
@@ -122,7 +122,7 @@ You need to run two services simultaneously:
 
 **Key Interface Features:**
 *   **Voice Input**: Upload audio files or record directly via microphone.
-*   **Real-time Transcription**: Uses **Typhoon ASR** to transcribe Thai speech instantly.
+*   **Real-time Transcription**: Uses **[Typhoon ASR](https://opentyphoon.ai/)** to transcribe Thai speech instantly.
 *   **LLM-Powered Analysis**: The user's conversation is sent to the **RAG-powered Gemini LLM**.
 *   **Risk Assessment**: The system analyzes the text against known scam patterns (from Thairath news) and provides a "Verdict" (Scam/Safe) with confidence levels.
 *   **Line Alert**: If a high risk is detected, a notification is automatically FLAGGED to your Line Group.
