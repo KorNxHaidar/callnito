@@ -1,0 +1,88 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.log
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# -------------------------
+# OS / Editor
+# -------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# -------------------------
+# Environment & Credentials
+# -------------------------
+.env
+*.env
+
+# -------------------------
+# Cache / Build artifacts
+# -------------------------
+*.egg-info/
+dist/
+build/
+*.spec
+
+# -------------------------
+# Chroma / Vector Database
+# -------------------------
+chroma_db/
+chroma_db_thairath/
+chroma/
+db/
+index/
+
+# -------------------------
+# Project specific folders
+# -------------------------
+diarize_output/
+scam_data/
+thairath_new/
+
+# Audio / video
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.flac
+
+# -------------------------
+# Logs & debug
+# -------------------------
+*.log
+logs/
+debug/
+
+# -------------------------
+# Testing
+# -------------------------
+.pytest_cache/
+coverage/
+htmlcov/
+.cache/
+test.py
+*.csv
+# -------------------------
+# Other
+# -------------------------
+uv.lock
+*.sqlite3
+*.db
+*.tmp
+*.bak
+*.swp
