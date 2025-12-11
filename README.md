@@ -90,6 +90,19 @@ The RAG system requires a knowledge base to function. This project includes scri
 
 ---
 
+📂 **Test Data for Evaluation**
+
+To evaluate the system or test the detection capabilities, we provide a curated dataset of simulated scam calls. You can use these files to test the **ASR transcription** and **Scam Detection** accuracy.
+
+📥 **[Download Test Data (Google Drive)](https://drive.google.com/drive/folders/11C9riAkgEDBxAFWAGzMVkiuUSfscoRAg?usp=sharing)**
+
+**Dataset Includes:**
+*   **Audio Files (`.wav`/`.mp3`)**: Simulated scam conversations and normal conversations.
+*   **Transcripts**: Correct text for evaluating ASR performance.
+*   **Evaluation Logs**: Example results to compare with your run.
+
+---
+
 ⚙️ **Deployment & Public URL**
 
 To integrate with the **Line Bot** and allow external access to the **Streamlit App**, you need to expose your local ports (8000 and 8501) to the internet.
