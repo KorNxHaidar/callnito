@@ -27,7 +27,7 @@ You can run this project on your local machine by following these steps:
 ### 1. Clone the Repository
 
 ```bash
-$ git clone https://github.com/your-username/callnito.git
+$ git clone https://github.com/KorNxHaidar/callnito.git
 $ cd callnito
 ```
 
