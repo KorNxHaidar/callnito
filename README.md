@@ -103,22 +103,6 @@ To evaluate the system or test the detection capabilities, we provide a curated 
 
 ---
 
-⚙️ **Deployment & Public URL**
-
-To integrate with the **Line Bot** and allow external access to the **Streamlit App**, you need to expose your local ports (8000 and 8501) to the internet.
-
-**Option A: Using [ngrok](https://ngrok.com/) (Recommended)**
-1.  Run `ngrok http 8000` -> Use this URL for the **Line Webhook** (e.g., `.../callback`).
-2.  Run `ngrok http 8501` -> Use this URL for the `WEB_URL` in `.env`.
-
-**Option B: Using [pinggy.io](https://pinggy.io/)**
-Run the following command to get a quick public URL:
-```bash
-$ ssh -p 443 -R0:localhost:8000 qr@a.pinggy.io
-```
-
----
-
 💬 **Usage: Scam Detection System**
 
 You need to run two services simultaneously:
@@ -132,6 +116,27 @@ You need to run two services simultaneously:
     ```bash
     $ uv run streamlit run app.py
     ```
+
+> **Note**: You must keep these two terminals running. If you close them, the application will stop working.
+
+⚙️ **Deployment & Public URL**
+
+To integrate with the **Line Bot** and allow external access to the **Streamlit App**, you need to expose your local ports (8000 and 8501) to the internet.
+
+> **Why do this step last?**
+> The services (FastAPI & Streamlit) must be running on your local machine *before* you create a tunnel. Tools like ngrok/pinggy need an active service to forward traffic to.
+
+**Option A: Using [ngrok](https://ngrok.com/) (Recommended)**
+1.  Run `ngrok http 8000` -> Use this URL for the **Line Webhook** (e.g., `.../callback`).
+2.  Run `ngrok http 8501` -> Use this URL for the `WEB_URL` in `.env`.
+
+**Option B: Using [pinggy.io](https://pinggy.io/)**
+Run the following command to get a quick public URL:
+```bash
+$ ssh -p 443 -R0:localhost:8000 qr@a.pinggy.io
+```
+
+---
 
 **Key Interface Features:**
 *   **Voice Input**: Upload audio files or record directly via microphone.

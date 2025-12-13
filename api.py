@@ -65,8 +65,6 @@ async def send_notification(request: AlertRequest, background_tasks: BackgroundT
             if not recipient_id:
                 raise HTTPException(status_code=400, detail="No recipient ID provided.")
 
-            # 🔥 NEW LOGIC: ดึงชื่อจริงจาก LINE Profile 🔥
-            # เราจะใช้ request.reporter_id (User ID คนแจ้ง) ไปถาม LINE ว่าเขาชื่ออะไร
             real_display_name = request.user_name # ค่า Default คือ "Group Member"
             
             if request.reporter_id:
@@ -77,7 +75,6 @@ async def send_notification(request: AlertRequest, background_tasks: BackgroundT
                     print(f"✅ Fetched User Name: {real_display_name}")
                 except Exception as e:
                     print(f"⚠️ Could not fetch user profile: {e}")
-                    # ถ้าดึงไม่ได้ ให้ใช้ค่าเดิมไปก่อน
 
             # --- สร้างข้อความ ---
             details = request.fraud_details or {}
@@ -88,7 +85,7 @@ async def send_notification(request: AlertRequest, background_tasks: BackgroundT
             
             text = f"🚨 ALERT: เตือนภัยกลุ่ม! 🚨\n"
             # ใช้ชื่อจริงที่ดึงมาได้
-            text += f"สมาชิกที่พบความเสี่ยง: คุณ {real_display_name}\n" 
+            text += f"สมาชิกที่พบความเสี่ยง: คุณ @{real_display_name}\n" 
             text += "━━━━━━━━━━━━━━━━━━\n\n"
             
             text += f"📊 ผลการประเมิน:\n{verdict}\n"
@@ -158,7 +155,7 @@ def handle_message(event):
         if group_id:
             target_url += f"&target_group_id={group_id}"
         
-        reply_msg = f"🔎 กดลิ้งค์นี้เพื่อเริ่มใช้งาน ({source_type}):\n👉 {target_url}"
+        reply_msg = f"🔎 กดลิ้งค์นี้เพื่อเริ่มใช้งาน:\n👉 {target_url}"
         
         with ApiClient(configuration) as api_client:
             line_bot_api = MessagingApi(api_client)

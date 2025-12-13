@@ -25,7 +25,6 @@ BACKEND_API_URL = "http://localhost:8000/notify"
 DEFAULT_TARGET_GROUP_ID = "YOUR_TARGET_GROUP_ID_HERE"
 
 def init_session_state():
-    # อ่านค่าจาก URL (st.query_params แบบใหม่)
     query_params = st.query_params
     
     url_user_id = query_params.get("line_user_id", None)
@@ -35,21 +34,18 @@ def init_session_state():
     if url_user_id:
         st.session_state['line_user_id'] = url_user_id
     
-    # 2. จัดการ Group ID (สำคัญมาก: ถ้ามีใน URL ให้ทับใน Session เลย)
+    # 2. จัดการ Group ID 
     if url_group_id:
         st.session_state['target_group_id'] = url_group_id
     
-    # ถ้าใน Session ยังไม่มี ให้กำหนดเป็นค่าว่าง
     if 'target_group_id' not in st.session_state:
         st.session_state['target_group_id'] = ""
         
     if 'line_user_id' not in st.session_state:
         st.session_state['line_user_id'] = ""
 
-# เรียกใช้งานทันทีที่เริ่มโหลดหน้า
 init_session_state()
 
-# ดึงค่าจาก Session มาใช้ (ตัวแปรหลักที่จะเอาไปใช้ทั้งแอป)
 user_id = st.session_state['line_user_id']
 target_group_id = st.session_state['target_group_id']
 display_name = "User" # Default
@@ -64,14 +60,13 @@ else:
 
 if target_group_id:
     st.sidebar.success(f"✅ Group ID: ...{target_group_id[-4:]}")
-    st.sidebar.caption(f"Full ID: {target_group_id}") # แสดงเต็มเพื่อ debug
+    st.sidebar.caption(f"Full ID: {target_group_id}") 
 else:
     st.sidebar.error("❌ ไม่พบ Group ID")
     st.sidebar.info("กรุณาเข้าผ่านลิงก์จาก LINE Bot ในกลุ่ม")
     
-    # ให้กรอกเองได้กรณีฉุกเฉิน
     target_group_id = st.sidebar.text_input("ใส่ Group ID เอง (ถ้าจำเป็น):", value=st.session_state['target_group_id'])
-    # อัปเดตกลับเข้า session ถ้ามีการพิมพ์แก้
+
     if target_group_id:
         st.session_state['target_group_id'] = target_group_id
 
@@ -97,7 +92,7 @@ def load_rag_system():
         return None
 
 vector_db = load_rag_system()
-# --- การตั้งค่า Gemini API ---
+
 @st.cache_resource
 def setup_gemini_client():
     """
@@ -143,7 +138,7 @@ asr_model_status.success(f"โมเดล ASR พร้อมใช้งาน
 
 def prepare_audio(input_path, output_path, target_sr=16000):
     """
-    เตรียมไฟล์เสียงสำหรับ Typhoon ASR (ดัดแปลงจากโค้ดของคุณ)
+    เตรียมไฟล์เสียงสำหรับ Typhoon ASR 
     """
     try:
         # Load (รองรับ MP3/WAV)
@@ -196,7 +191,7 @@ def run_transcription(asr_model, uploaded_file):
         if os.path.exists(output_wav_path):
             os.remove(output_wav_path)
 
-# --- ฟังก์ชันใหม่สำหรับไมโครโฟน ---
+# --- ฟังก์ชัน สำหรับไมโครโฟน ---
 def run_transcription_from_mic(asr_model, audio_bytes):
     """
     รับ audio bytes (WAV) จาก st_audiorec, ประมวลผล, และถอดเสียง
@@ -331,7 +326,7 @@ def send_alert_to_line(message, result, user_name, target_id):
     if not target_id:
         target_id = st.session_state.get('target_group_id')
     
-    # ดึง User ID (Reporter) จาก Session เพื่อใช้เป็น Fallback
+    # ดึง User ID จาก Session เพื่อใช้เป็น Fallback
     reporter_id = st.session_state.get('line_user_id')
 
     payload = {
@@ -343,7 +338,6 @@ def send_alert_to_line(message, result, user_name, target_id):
     }
 
     try:
-        # 🟢 แก้ไข 1: ใช้ชื่อตัวแปร BACKEND_API_URL ให้ตรงกับที่ประกาศไว้ข้างบน
         response = requests.post(BACKEND_API_URL, json=payload)
             
         if response.status_code == 200:
@@ -392,8 +386,6 @@ def display_analysis_results(result, analyzed_text=None):
         for s in result.get("warning_signs", []):
             st.markdown(f"- {s}")
 
-# --- หน้าจอหลัก Streamlit ---
-
 st.title("🕵️‍♂️ แอปตรวจจับบทสนทนามิจฉาชีพ (Scam Detector)")
 st.caption("ขับเคลื่อนด้วย Typhoon ASR + Gemini LLM")
 
@@ -436,24 +428,29 @@ with tab2:
             display_analysis_results(analysis_result, text_input)
 
 with tab3:
-    st.header("วิเคราะห์จากเสียงไมโครโฟน")
-    st.write("กดปุ่มอัดเสียง เริ่มพูด และกดปุ่มหยุดเมื่อพูดจบครับ")
-    
-    # เรียก component อัดเสียง
-    wav_audio_data = st_audiorec()
+    st.header("วิเคราะห์จากไมโครโฟน (Real-time Mic Input)")
 
-    if wav_audio_data is not None:
-        
-        transcript = run_transcription_from_mic(asr_model, wav_audio_data)
-        
-        if transcript and not transcript.startswith("["):
-            st.info(f"**ข้อความที่ถอดได้:**\n\n{transcript}")
-            st.divider()
-            
-            with st.spinner(f"กำลังส่งข้อความให้ LLM วิเคราะห์... (RAG: {'ON' if use_rag_feature else 'OFF'})"):
-                analysis_result = analyze_scam_with_llm(genai_client, transcript, use_rag=use_rag_feature)
-            
-            if analysis_result:
-                display_analysis_results(analysis_result, transcript)
-        else:
-            st.error(transcript)
+    st.write("กดปุ่มด้านล่างเพื่ออัดเสียง แล้วกด Stop เมื่อพูดเสร็จ:")
+
+    audio_bytes = st_audiorec() 
+
+    if audio_bytes is not None:
+        st.audio(audio_bytes, format='audio/wav')
+        st.success("🎧 ได้รับเสียงเรียบร้อย!")
+
+        if st.button("ถอดเสียงและวิเคราะห์", key="analyze_mic"):
+            transcript = run_transcription_from_mic(asr_model, audio_bytes)
+
+            if transcript and not transcript.startswith("["):
+                st.info(f"**ข้อความที่ถอดได้:**\n\n{transcript}")
+                st.divider()
+
+                with st.spinner(f"กำลังส่งข้อความให้ LLM วิเคราะห์... (RAG: {'ON' if use_rag_feature else 'OFF'})"):
+                    analysis_result = analyze_scam_with_llm(
+                        genai_client, transcript, use_rag=use_rag_feature
+                    )
+
+                if analysis_result:
+                    display_analysis_results(analysis_result, transcript)
+            else:
+                st.error(transcript)
