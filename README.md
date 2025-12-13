@@ -76,7 +76,11 @@ WEB_URL="https://xxxx-xxxx.ngrok-free.app"
 ```
 
 ---
+ 📂 **Thairath News Folder**
 
+   ☕︎  **[Google Drive - Thairath News Data Folder](https://drive.google.com/drive/folders/1fGn-gGTraldVv9bmtlcculPsdwBq30-r?usp=sharing)**
+   
+---
 🗄️ **Data Pipeline: Generating the Knowledge Base**
 
 The RAG system requires a knowledge base to function. This project includes scripts to build the vector store from Thairath news data.
